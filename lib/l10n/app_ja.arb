@@ -1,0 +1,5 @@
+{
+  "language" : "日本語",
+  "helloWorld" : "こんにちは世界",
+  "name" : "私の名前は {username} {surname} です"
+}
