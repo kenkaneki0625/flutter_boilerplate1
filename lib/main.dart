@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_boilerplate1/l10n/l10n.dart';
+import 'package:flutter_boilerplate1/components/Pages/landing/home_page.dart';
+import 'package:flutter_boilerplate1/components/Pages/onboarding/onboarding_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final showHome = prefs.getBool('showHome') ?? false;
+  runApp(MyApp(showHome: showHome));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final bool showHome;
+
+  const MyApp({
+    Key? key,
+    required this.showHome,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,42 +35,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate
       ],
-      home: const MyHomePage(title: 'Flutter Boilerplate'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).language),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              AppLocalizations.of(context).helloWorld,
-            ),
-            Text(
-              AppLocalizations.of(context).name('Shaon', 'Baidya'),
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
+      home: showHome ? HomePage() : OnBoardingPage(),
     );
   }
 }
